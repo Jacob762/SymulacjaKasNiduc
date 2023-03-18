@@ -9,3 +9,5 @@
 1. zrobienie wykresów
 
 Na razie chyba to tyle
+
+XD-
