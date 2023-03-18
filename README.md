@@ -1,1 +1,3 @@
 # SymulacjaKasNiduc
+
+test
