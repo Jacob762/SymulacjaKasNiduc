@@ -1,3 +1,6 @@
+# Siema macie tu przykład klasy i jej implementacji  
+jak coś to dawajcie znać
+
 # SymulacjaKasNiduc
 
 #TO DO
