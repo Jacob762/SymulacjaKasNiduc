@@ -1,0 +1,9 @@
+-Za duża kolejka (problem z dostępnością)
+*Klasa kolejka zawiera informację o błędzie
+*Obecna ilość klientów
+-Brak nominałów do wydania reszty / odrzuca kartę (problem z płatnością)
+Gdy nastąpi problem z płatnością:
+-Klient będący aktualnie obsługiwany zostaje przy kasie
+-Reszta zostaje przy kasie gdy jest poniżej np 3 iteracji, potem idą do innych kolejek
+-Zużycie kasy (za duża ilość transkacji z rzędu)
+Iteracja umownie trwa minutę
