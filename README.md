@@ -39,4 +39,4 @@
 1. zapisywanie danych
 1. zrobienie wykresów
 
->Na razie chyba to tyle jak czegoś zapomniałem to dajcie znać
+
