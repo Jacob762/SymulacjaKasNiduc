@@ -28,16 +28,16 @@ class Simulation:
 
     def simulatione(self, czasPracy: int):
         for i in range(czasPracy):
-            print(i, " ITERACJA")
+            print(f"{i},  ITERACJA")
             for client in range(random.randint(0, 3)):  # dodwanie klientow do ogolnej kolejki
                 self.klientela.append(Klient())
-                print(self.klientela[client].czasObslugi, " CZAS OBSLUGI KLIENTA NR ", client)
+                print(f"{self.klientela[client].czasObslugi}, CZAS OBSLUGI KLIENTA NR: {client}")
             print(len(self.klientela))
             j = 0
             while len(self.klientela) > 0 and j < len(self.lista):  # petla do dyspozycji nowych klientow
                 if self.lista[j].dodajKlienta(self.klientela.pop(0)) == -7:
                     j += 1
-            print(len(self.lista[0].klienci), " ZAPELNIENIE KASY")
+            print(f"{len(self.lista[0].klienci)},  ZAPELNIENIE KASY")
             if len(self.klientela) != 0:
                 print("Wszystkie kasy zajete")
             for k in range(len(self.lista)):  # trzeba dodac zeby tylko aktywne kasy obslugiwaly klientow
