@@ -10,7 +10,7 @@ class Klient:
         self.czasObslugi = random.randint(1, 2)
         self.polak=random.randint(0, 1)
         self.idTransakcji=idTransakcji
-        self.rodzina = random.randint(5)
+        self.rodzina = random.randint(0,5)
         self.wydatek = random.randint(10, 400)*self.rodzina #  w pln
         self.karta = random.randint(0,1)
         if self.karta==1:
