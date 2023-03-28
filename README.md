@@ -11,7 +11,14 @@
 1. Klasa klient:  
     - KOlor  
     - nr kasy (??)
-    - ilosc minut obsługi (int) 
+    - ilosc minut obsługi (int)  
+    
+    --------
+    - polak/ mowi po polsku
+    - karta biedronki/aplikacja
+    - rodzina  
+    - karta/ gotówka  
+    - nr transakcji a.k.a id klienta ale z klientem trudniej bedzie   
 1. Klasa Kolejka:  
     - przypisana do kasy
     - znajdują się w niej klienci
@@ -27,6 +34,12 @@
         - za duża kolejka  
         - za dużo transkacji
         - nie ma wydać/problemy z płatnością  
+        - nie ma naklejki  
+        - za duzo pieniedzy w kasie (kwestia bezpieczeństwa)  
+        - pani nie ma jak wydac  
+        - mleko się rozlało- kase trzeba posprzątać  
+        - obcokrajowiec nie mówi po polsku  
+
 1. GUI:  
     - Kasy:  
         - zielona- aktywna
@@ -36,7 +49,15 @@
     - Klient w kolejce:  
         - jest- czarny
         - nie ma- brak/biały 
-1. zapisywanie danych
+1. zapisywanie danych:  
+    - okres ok 6 miesiecy?  
+    - dane typu:
+        - srednia liczba klientów na godzine?
+        - czym płacą (karta/gotówka)  
+        - karta lojalnościowa ?  
+        - czy mają rodzine i jak tak to ile osob  
+        - cena zakupów x ilość członków rodziny  
+        - czy karte lojalnościowa w telefonie czy plastik  
 1. zrobienie wykresów
 
 
