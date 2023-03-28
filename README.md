@@ -9,16 +9,16 @@
     - kolor  
     - naprawa trwa 3h  
 1. Klasa klient:  
-    - KOlor  
-    - nr kasy (??)
-    - ilosc minut obsługi (int)  
+    - ~~KOlor~~  
+    - nr kasy (??) imo niepotrzebne   
+    - ~~ilosc minut obsługi (int)~~  
     
     --------
-    - polak/ mowi po polsku
-    - karta biedronki/aplikacja
-    - rodzina  
-    - karta/ gotówka  
-    - nr transakcji a.k.a id klienta ale z klientem trudniej bedzie   
+    - ~~polak/ mowi po polsku~~
+    - ~~karta biedronki/aplikacja~~
+    - ~~rodzina~~  
+    - ~~karta/ gotówka~~  
+    - ~~nr transakcji a.k.a id klienta ale z klientem trudniej bedzie~~   
 1. Klasa Kolejka:  
     - przypisana do kasy
     - znajdują się w niej klienci
@@ -52,7 +52,7 @@
 1. zapisywanie danych:  
     - okres ok 6 miesiecy?  
     - dane typu:
-        - srednia liczba klientów na godzine?
+        - srednia liczba klientów na dziennie/godzinowo/ w zalezności od dnia??
         - czym płacą (karta/gotówka)  
         - karta lojalnościowa ?  
         - czy mają rodzine i jak tak to ile osob  

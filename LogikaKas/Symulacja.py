@@ -8,6 +8,17 @@ class Simulation:
     lista = []
     klientela = []
 
+    # statystyki dotyczące klientów
+    # statystyki ogólne 
+    klienciWszyscy=0
+    klienciKarta=0
+    klienciPlastik=0
+    klienciAplikacja=0 # w sumie to można usunąc i na koniec odjąc od tych z kartą tych z plastikiem
+    klienciPolacy =0
+    #statystyki dzienne + godzinowe bedą w odpowiedniej pętli
+
+    
+
     def __init__(self, iloscKas: int):
         self.start(iloscKas)
         self.simulatione(15)
@@ -27,10 +38,24 @@ class Simulation:
             return -7
 
     def simulatione(self, czasPracy: int):
+        # for dzien in czasPracy:
+        # for godzina in range(godzinPracy)
         for i in range(czasPracy):
             print(f"{i},  ITERACJA")
             for client in range(random.randint(0, 3)):  # dodwanie klientow do ogolnej kolejki
-                self.klientela.append(Klient())
+                # tutaj wlatuje statystyczny check:
+                pomocniczyklient=Klient(klienciWszyscy)
+                klienciWszyscy+=1
+                if pomocniczyklient.karta==1:
+                    klienciKarta+=1
+                if pomocniczyklient.plastik==1:
+                    klienciPlastik+=1
+                else:
+                    klienciAplikacja+=1
+                if pomocniczyklient.polak==1:
+                    klienciPolacy+=1
+                
+                self.klientela.append(pomocniczyklient)
                 print(f"{self.klientela[client].czasObslugi}, CZAS OBSLUGI KLIENTA NR: {client}")
             print(len(self.klientela))
             j = 0
