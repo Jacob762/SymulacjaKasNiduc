@@ -8,7 +8,7 @@ class Klient:
         # false=0 i chyba cała reszta, true=1
         kolor = "black"
         self.czasObslugi = random.randint(1, 2)
-        self.polak=random.randint(0, 1)
+        self.polak=random.randint(0, 5)
         self.idTransakcji=idTransakcji
         self.rodzina = random.randint(0,5)
         self.wydatek = random.randint(10, 400)*self.rodzina #  w pln
