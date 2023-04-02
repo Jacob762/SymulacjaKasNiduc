@@ -1,3 +1,7 @@
+# Dobra chłopaki sprawa jest taka że siedze w lobby hotelowym i git mi się wypierdala!!! ZARAZ MNIE COŚ PIERDOLNIE
+#KUBA KLAWON SORRY ŻE TAK CHUJOWO ALE INACZEJ PLIKÓW NIE BYŁEM W STANIE DODAĆ. MAM NADZIEJE ŻE NADAL MIĘDZY NAMI SZTAMA KOCIE
+
+
 # SymulacjaKasNiduc
 
 ## TO DO:
