@@ -7,6 +7,7 @@ from LogikaKas.Klient import Klient
 class Simulation:
     lista = []
     klientela = []
+    statystyki = []
     lastCall = False  # zmienna do okreslania ostatnich 20 minut w sklepie
     # atrybuty poczatkowe
     maxIloscTransakcji = 30
@@ -16,10 +17,29 @@ class Simulation:
     klienciWszyscy = 0
     klienciKarta = 0
     klienciPlastik = 0
-    klienciAplikacja = 0  # w sumie to można usunąc i na koniec odjąc od tych z kartą tych z plastikiem
     klienciPolacy = 0
+    klienciKobiety = 0
+    sredniWiek = 0
+    klienciWroclaw = 0
 
-    # statystyki dzienne + godzinowe bedą w odpowiedniej pętli
+    # statystyki godzinowe 
+    klienciWszyscyGodz = 0
+    klienciKartaGodz = 0
+    klienciPlastikGodz = 0
+    klienciPolacyGodz = 0
+    klienciKobietyGodz = 0
+    sredniWiekGodz = 0
+    klienciWroclawGodz = 0
+
+    #statystyki dzienne
+    # tak w sumie to nwm czy są potrzebne wgl bo zawsze mozna zsumować godzinowe wiec tutaj nwm
+    klienciWszyscyDzien = 0
+    klienciKartaDzien = 0
+    klienciPlastikDzien = 0
+    klienciPolacyDzien = 0
+    klienciKobietyDzien = 0
+    sredniWiekDzien = 0
+    klienciWroclawDzien = 0
 
     def __init__(self, iloscKas: int):
         self.start(iloscKas)
@@ -38,10 +58,24 @@ class Simulation:
     def simulatione(self, dniPracy: int, godzinyPracy):
         for dzien in range(dniPracy):
             self.lastCall = False
+            self.klienciWszyscyDzien = 0
+            self.klienciKartaDzien = 0
+            self.klienciPlastikDzien = 0
+            self.klienciPolacyDzien = 0
+            self.klienciKobietyDzien = 0
+            self.sredniWiekDzien = 0
+            self.klienciWroclawDzien = 0
             # statysyki dzienne
             print(f"DZIEN {dzien}")
             for godziny in range(godzinyPracy):
                 # statystyki godzinowe
+                self.klienciWszyscyGodz = 0
+                self.klienciKartaGodz = 0
+                self.klienciPlastikGodz = 0
+                self.klienciPolacyGodz = 0
+                self.klienciKobietyGodz = 0
+                self.sredniWiekGodz = 0
+                self.klienciWroclawGodz = 0
                 for i in range(60):
                     print(f"{i + 1},  ITERACJA")
                     # ostatnie 20 minut przed klienci nie przychodza
@@ -75,7 +109,7 @@ class Simulation:
 
                     if len(self.klientela) != 0:
                         print("Wszystkie kasy zajete")
-
+                    #obsluga klienta
                     for k in range(len(self.lista)):
                         # trzeba dodac zeby tylko aktywne kasy obslugiwaly klientow
                         if self.lista[k].getstopTime() == 0 and self.lista[k].getWypadek():
@@ -98,6 +132,8 @@ class Simulation:
                         if self.lista[k].getActive() and self.lista[k].getObsluga():
                             self.generujWypadek(self.lista[k].obslugiwany, self.lista[k])
 
+                        
+                        #tutaj sie konczy obsluga klienta
                         print(f"{self.lista[k].getActive()} ILOSC TRANSKACJI : {self.lista[k].getIloscTransakcji()}")
                         # sprawdza czy jest awaria, jesli jest to odejmuje minute od czas serwisu, jesli serwis
                         # zakonczony to konczy awarie
@@ -108,6 +144,8 @@ class Simulation:
                             if self.lista[k].serwis == 0:
                                 self.lista[k].awariaStop()
                                 self.lista[k].otworzKase()
+                self.zapiszStatystykiGodzinowe(dzien, godziny)
+                print(self.statystyki)
         self.pokazStatystyki()
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
@@ -120,25 +158,67 @@ class Simulation:
             kasa.setstopTime(random.randint(0, 2))
             print(f"WYPADEK random")
 
+    def przepełnionaKasa(self, kasa: Kasa):
+        print("Kasa przepełniona! Przepraszamy. Względy bezpieczenstwa")
+        kasa.setstopTime(5)
+        #tutaj (^^^^) wszystko chyba zrobione. kwestia tylko taka że nwm w którym momencie klient zostanie obsłużony
+        # moj plan zaklada że podczas albo po ostatniej iteracji -> if (kasa.dodajPieniadze(klient.wydatek))==-8 -> uruchom przepelnionaKasa. 
+        # else: zajebiście symulacja idzie dalej :))
+
+    def zapiszStatystykiGodzinowe(self, dzien, godzina):
+        #W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
+        #wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
+        statyGodzinowe = (self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz-self.klienciKobietyGodz,self.sredniWiekGodz/self.klienciWszyscyGodz,self.klienciKartaGodz,self.klienciWszyscyGodz-self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz, self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz-self.klienciPolacyGodz, self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz)
+        pomoc=(dzien + 1, godzina + 1, statyGodzinowe)
+        self.statystyki.append(pomoc)
+
     def generujKlienta(self):
         for client in range(random.randint(0, 3)):
             # tutaj wlatuje statystyczny check:
             pomocniczyklient = Klient(self.klienciWszyscy)
             self.klienciWszyscy += 1
+            self.klienciWszyscyGodz+=1
+            self.klienciWszyscyDzien+=1
             if pomocniczyklient.karta == 1:
                 self.klienciKarta += 1
+                self.klienciKartaGodz +=1
+                self.klienciKartaDzien+=1
             if pomocniczyklient.plastik == 1:
                 self.klienciPlastik += 1
+                self.klienciPlastikGodz+=1
+                self.klienciPlastikDzien+=1
             if pomocniczyklient.polak != 1:
                 self.klienciPolacy += 1
+                self.klienciPolacyGodz += 1
+                self.klienciPolacyDzien += 1
+            if pomocniczyklient.kobieta==1:
+                self.klienciKobiety += 1
+                self.klienciKobietyDzien +=1
+                self.klienciKobietyGodz+=1
+            if pomocniczyklient.wroclaw== 1:
+                self.klienciWroclaw += 1
+                self.klienciWroclawDzien += 1
+                self.klienciWroclawGodz += 1
+
+            self.sredniWiek += pomocniczyklient.wiek
+            self.sredniWiekDzien += pomocniczyklient.wiek
+            self.sredniWiekGodz += pomocniczyklient.wiek
 
             self.klientela.append(pomocniczyklient)
             print(f"{self.klientela[client].czasObslugi}, CZAS OBSLUGI KLIENTA NR: {client}")
 
+
+
+# tutaj trzeba zmienic 
     def pokazStatystyki(self):
-        print(f"Wszyscy klienci z dnia: {self.klienciWszyscy}")
+        print(f"Wszyscy klienci: {self.klienciWszyscy}")
         print(f"Klienci placacy karta: {self.klienciKarta}")
         print(f"Klienci plastki: {self.klienciPlastik}")
         self.klienciAplikacja = self.klienciKarta - self.klienciPlastik
         print(f"Klienci aplikacja: {self.klienciAplikacja}")
         print(f"Klienci polacy: {self.klienciPolacy}")
+        print(f"Ile kobiet kupiło w sklepie: {self.klienciKobiety}")
+        print(f"Ile mężczyzn było w sklepie: {self.klienciWszyscy-self.klienciKobiety}")
+        print(f"sredni wiek klienta: {self.sredniWiek/self.klienciWszyscy}")
+        print(f"Klienci z wrocławia: {self.klienciWroclaw}")
+        print(f"Klienci z poza wrocławia: {self.klienciWszyscy-self.klienciWroclaw}")
