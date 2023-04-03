@@ -18,6 +18,10 @@ class Klient:
             self.plastik=random.randint(0, 2)# co 3 osoba plastik
         else :
             self.plastik=0
+        self.kobieta=random.randint(0, 2)
+        self.wiek= random.randint(10, 93)
+        #skad jest -> wrocław czy okolice :))
+        self.wroclaw=random.randint(0, 2) #zakladam że to większy sklep na obrzeżach typu bielany wrocławskie
 
 
 

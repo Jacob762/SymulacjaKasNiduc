@@ -18,6 +18,7 @@ class Kasa:
         self.obslugiwany = self.straznik
         self.obsluga = False
         self.ilePusta = 0  # okresla ile "rund" kasa stoi pusta, po x rundach zamyka kase
+        self.ilePieniedzy=2_000
 
     def getIloscTransakcji(self):
         # if self.active:
@@ -70,6 +71,17 @@ class Kasa:
         else:
             return -7
 
+    def dodajPieniadze(self, cash: int):
+        if self.ilePieniedzy<10_000:
+            self.ilePieniedzy += cash
+            return 1
+        else:
+            return -8
+
+    # plan był taki żeby wyw
+    #
+
+
     def awariaStart(self, czasSerwisowania: int):
         self.awaria = True
         self.serwis = czasSerwisowania
@@ -84,10 +96,11 @@ class Kasa:
         if not self.getActive(): return -7
         if self.obslugiwany.czasObslugi == 0 and len(self.klienci) > 0:
             self.obsluga = True
-            self.obslugiwany = self.klienci.pop(0)  # zabezpieczyc przed popowaniem z pustej listy
-            self.obslugiwany.czasObslugi -= 1
-            self.ilePusta = 0
-            self.iloscTransakcji += 1
+            if len(self.klienci)>0:
+                self.obslugiwany = self.klienci.pop(0)  # zabezpieczyc przed popowaniem z pustej listy -> Done :))
+                self.obslugiwany.czasObslugi -= 1
+                self.ilePusta = 0
+                self.iloscTransakcji += 1
         elif self.obslugiwany.czasObslugi == 0:
             self.obsluga = False
             self.obslugiwany = self.straznik  # straznik oznacza ze nikt nie stoi przy kasie
