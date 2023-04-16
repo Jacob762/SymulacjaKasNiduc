@@ -9,6 +9,7 @@ class Simulation:
     klientela = []
     statystyki = []
     lastCall = False  # zmienna do okreslania ostatnich 20 minut w sklepie
+    dziejeSie = False # zmienna do okreslania wiekszego natloku klientow w dni robocze
     # atrybuty poczatkowe
     maxIloscTransakcji = 30
     czasSerwisowania = 10
@@ -57,6 +58,7 @@ class Simulation:
 
     def simulatione(self, dniPracy: int, godzinyPracy):
         for dzien in range(dniPracy):
+            self.dziejeSie = False
             self.lastCall = False
             self.klienciWszyscyDzien = 0
             self.klienciKartaDzien = 0
@@ -76,6 +78,10 @@ class Simulation:
                 self.klienciKobietyGodz = 0
                 self.sredniWiekGodz = 0
                 self.klienciWroclawGodz = 0
+                if godziny+7==12 or godziny+7==16:   # miedzy 12 a 14 i miedzy 16 a 18 wzmozona aktywnosc ludzi
+                    self.dziejeSie = True
+                elif godziny+7==14 or godziny+7==18:
+                    self.dziejeSie = False
                 for i in range(60):
                     print(f"{i + 1},  ITERACJA")
                     # ostatnie 20 minut przed klienci nie przychodza
@@ -83,7 +89,7 @@ class Simulation:
                         self.lastCall = True
                     # dodwanie klientow do ogolnej kolejki
                     if not self.lastCall:
-                        self.generujKlienta()
+                        self.generujKlienta(self.dziejeSie)
 
                     print(f"{len(self.klientela)} DLUGOSC KLIENELI")
                     # petla do dyspozycji nowych klientow
@@ -180,8 +186,15 @@ class Simulation:
         pomoc=(dzien + 1, godzina + 1, statyGodzinowe)
         self.statystyki.append(pomoc)
 
-    def generujKlienta(self):
-        for client in range(random.randint(0, 3)):
+    def generujKlienta(self, tlum: bool):
+        if tlum:
+            print(f"Tlum")
+            maxLosowanie = 7 # zmienna okreslajaca maksymalna skrajna liczbe do losowania ilosci klientow
+            minLosowanie = 3
+        else:
+            maxLosowanie = 3
+            minLosowanie = 0
+        for client in range(random.randint(minLosowanie, maxLosowanie)):
             # tutaj wlatuje statystyczny check:
             pomocniczyklient = Klient(self.klienciWszyscy)
             self.klienciWszyscy += 1
