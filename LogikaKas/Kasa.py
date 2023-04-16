@@ -74,9 +74,7 @@ class Kasa:
     def dodajPieniadze(self, cash: int):
         if self.ilePieniedzy<10_000:
             self.ilePieniedzy += cash
-            return 1
-        else:
-            return -8
+            
 
     # plan był taki żeby wyw
     #
@@ -98,6 +96,7 @@ class Kasa:
             self.obsluga = True
             if len(self.klienci)>0:
                 self.obslugiwany = self.klienci.pop(0)  # zabezpieczyc przed popowaniem z pustej listy -> Done :))
+                self.dodajPieniadze(self.obslugiwany.wydatek)
                 self.obslugiwany.czasObslugi -= 1
                 self.ilePusta = 0
                 self.iloscTransakcji += 1

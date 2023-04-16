@@ -124,7 +124,16 @@ class Simulation:
                                 print(f"AWARIA KASY NR {k}, CZAS SERWISOWANIA: {self.czasSerwisowania}")
                         # obsluga klienta
                         self.lista[k].obsluzKlienta()
-                        if self.lista[k].getActive(): print(self.lista[k].getIlePusta(), " KASA NR ", k, " STOI TYLE RUND PUSTA")
+                        if self.lista[k].obslugiwany==self.lista[k].straznik: 
+                            #jesli kasa jest pusta to wtedy:
+                            #sprawdza czy nie ma za duzo pieniedzy
+                            if self.lista[k].ilePieniedzy>=10_000:
+                                print("Kasa przepełniona! Przepraszamy. Względy bezpieczenstwa")
+                                self.lista[k].setstopTime(5)
+                                self.lista[k].ilePieniedzy=2_000
+
+                        if self.lista[k].getActive():
+                            print(self.lista[k].getIlePusta(), " KASA NR ", k, " STOI TYLE RUND PUSTA")
                         if self.lista[k].getIlePusta() == 5:
                             self.lista[k].zamknijKase(self.klientela)
                             print(f"ZAMKNIECIE KASY PO 5 MINUTACH NIEAKTYWNOSCI")
@@ -134,6 +143,9 @@ class Simulation:
 
                         
                         #tutaj sie konczy obsluga klienta
+                        
+
+
                         print(f"{self.lista[k].getActive()} ILOSC TRANSKACJI : {self.lista[k].getIloscTransakcji()}")
                         # sprawdza czy jest awaria, jesli jest to odejmuje minute od czas serwisu, jesli serwis
                         # zakonczony to konczy awarie
@@ -144,6 +156,7 @@ class Simulation:
                             if self.lista[k].serwis == 0:
                                 self.lista[k].awariaStop()
                                 self.lista[k].otworzKase()
+                        
                 self.zapiszStatystykiGodzinowe(dzien, godziny)
                 print(self.statystyki)
         self.pokazStatystyki()
@@ -158,12 +171,7 @@ class Simulation:
             kasa.setstopTime(random.randint(0, 2))
             print(f"WYPADEK random")
 
-    def przepełnionaKasa(self, kasa: Kasa):
-        print("Kasa przepełniona! Przepraszamy. Względy bezpieczenstwa")
-        kasa.setstopTime(5)
-        #tutaj (^^^^) wszystko chyba zrobione. kwestia tylko taka że nwm w którym momencie klient zostanie obsłużony
-        # moj plan zaklada że podczas albo po ostatniej iteracji -> if (kasa.dodajPieniadze(klient.wydatek))==-8 -> uruchom przepelnionaKasa. 
-        # else: zajebiście symulacja idzie dalej :))
+    
 
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
         #W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
