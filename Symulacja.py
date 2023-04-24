@@ -46,7 +46,7 @@ class Simulation:
 
     def __init__(self, iloscKas: int):
         self.start(iloscKas)
-        self.gui = MyGui()
+        self.gui = MyGui(iloscKas)
         self.simulatione(1, 12)
 
     # Dodaje ilosc kas po czym inicjalizuje pierwszą kase:
@@ -87,7 +87,7 @@ class Simulation:
                     self.dziejeSie = False
                 for i in range(60):
                     #GUI petla do sprawdzenia koloru kas
-                    time.sleep(0.1)
+                    time.sleep(0.2)
                     for k in range (len(self.lista)):
                         if self.lista[k].getActive():
                             self.gui.kasa_change_color(k, "green")
@@ -130,7 +130,7 @@ class Simulation:
                     # GUI petla do klientow przy kasie
                     for k in range(len(self.lista)):
                         self.gui.klienci_change_color(k, self.lista[k].getSize())
-                    time.sleep(0.1)
+                    time.sleep(0.2)
 
                     if len(self.klientela) != 0:
                         print("Wszystkie kasy zajete")
