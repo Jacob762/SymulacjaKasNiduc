@@ -1,7 +1,9 @@
 import random
+import time
 
 from LogikaKas.Kasa import Kasa
 from LogikaKas.Klient import Klient
+from LogikaKas.myGui import MyGui
 
 
 class Simulation:
@@ -9,12 +11,14 @@ class Simulation:
     klientela = []
     statystyki = []
     lastCall = False  # zmienna do okreslania ostatnich 20 minut w sklepie
-    dziejeSie = False # zmienna do okreslania wiekszego natloku klientow w dni robocze
+    dziejeSie = False  # zmienna do okreslania wiekszego natloku klientow w dni robocze
     # atrybuty poczatkowe
+    #zmieniłem na 300 bo 30 to trochę xD a i tak powinno być z 10_000
+    #do testowania wygodniej 30 ale na release jednak jak wyżej
     maxIloscTransakcji = 30
     czasSerwisowania = 10
     # statystyki dotyczące klientów
-    # statystyki ogólne 
+    # statystyki ogólne
     klienciWszyscy = 0
     klienciKarta = 0
     klienciPlastik = 0
@@ -23,7 +27,7 @@ class Simulation:
     sredniWiek = 0
     klienciWroclaw = 0
 
-    # statystyki godzinowe 
+    # statystyki godzinowe
     klienciWszyscyGodz = 0
     klienciKartaGodz = 0
     klienciPlastikGodz = 0
@@ -32,7 +36,7 @@ class Simulation:
     sredniWiekGodz = 0
     klienciWroclawGodz = 0
 
-    #statystyki dzienne
+    # statystyki dzienne
     # tak w sumie to nwm czy są potrzebne wgl bo zawsze mozna zsumować godzinowe wiec tutaj nwm
     klienciWszyscyDzien = 0
     klienciKartaDzien = 0
@@ -42,9 +46,12 @@ class Simulation:
     sredniWiekDzien = 0
     klienciWroclawDzien = 0
 
-    def __init__(self, iloscKas: int):
+    def __init__(self, iloscKas: int,dniPracy: int, godzinyPracy: int , awaryjnoscKasy: int):
         self.start(iloscKas)
-        self.simulatione(1, 12)
+        self.gui = MyGui(iloscKas)
+        self.simulatione(dniPracy, godzinyPracy)
+        #Poniżej jeśli ustawiamy prawdopodobieństwo awarii kasy na 20 to awaria nastąpi 20% szybciej:
+        self.maxIloscTransakcji*=(100-awaryjnoscKasy)/100
 
     # Dodaje ilosc kas po czym inicjalizuje pierwszą kase:
     def start(self, iloscKas: int):
@@ -78,11 +85,23 @@ class Simulation:
                 self.klienciKobietyGodz = 0
                 self.sredniWiekGodz = 0
                 self.klienciWroclawGodz = 0
-                if godziny+7==12 or godziny+7==16:   # miedzy 12 a 14 i miedzy 16 a 18 wzmozona aktywnosc ludzi
+                if godziny + 7 == 12 or godziny + 7 == 16:  # miedzy 12 a 14 i miedzy 16 a 18 wzmozona aktywnosc ludzi
                     self.dziejeSie = True
-                elif godziny+7==14 or godziny+7==18:
+                elif godziny + 7 == 14 or godziny + 7 == 18:
                     self.dziejeSie = False
                 for i in range(60):
+                    #GUI petla do sprawdzenia koloru kas
+                    time.sleep(0.2)
+                    for k in range (len(self.lista)):
+                        if self.lista[k].getActive():
+                            self.gui.kasa_change_color(k, "green")
+                        if not self.lista[k].getActive():
+                            self.gui.kasa_change_color(k, "red")
+                        if self.lista[k].getAwaria():
+                            self.gui.kasa_change_color(k, "gray")
+                        if self.lista[k].getWypadek():
+                            self.gui.kasa_change_color(k, "orange")
+
                     print(f"{i + 1},  ITERACJA")
                     # ostatnie 20 minut przed klienci nie przychodza
                     if godzinyPracy - godziny == 1 and i == 40:
@@ -112,10 +131,14 @@ class Simulation:
                         print(f"{len(self.lista[k].klienci)},  ZAPELNIENIE KASY")
                         print(f"CZAS OCZEKIWANIA NA KONIEC WYPADKU: {self.lista[k].stopTime}")
 
+                    # GUI petla do klientow przy kasie
+                    for k in range(len(self.lista)):
+                        self.gui.klienci_change_color(k, self.lista[k].getSize())
+                    time.sleep(0.2)
 
                     if len(self.klientela) != 0:
                         print("Wszystkie kasy zajete")
-                    #obsluga klienta
+                    # obsluga klienta
                     for k in range(len(self.lista)):
                         # trzeba dodac zeby tylko aktywne kasy obslugiwaly klientow
                         if self.lista[k].getstopTime() == 0 and self.lista[k].getWypadek():
@@ -130,13 +153,13 @@ class Simulation:
                                 print(f"AWARIA KASY NR {k}, CZAS SERWISOWANIA: {self.czasSerwisowania}")
                         # obsluga klienta
                         self.lista[k].obsluzKlienta()
-                        if self.lista[k].obslugiwany==self.lista[k].straznik: 
-                            #jesli kasa jest pusta to wtedy:
-                            #sprawdza czy nie ma za duzo pieniedzy
-                            if self.lista[k].ilePieniedzy>=10_000:
+                        if self.lista[k].obslugiwany == self.lista[k].straznik:
+                            # jesli kasa jest pusta to wtedy:
+                            # sprawdza czy nie ma za duzo pieniedzy
+                            if self.lista[k].ilePieniedzy >= 10_000:
                                 print("Kasa przepełniona! Przepraszamy. Względy bezpieczenstwa")
                                 self.lista[k].setstopTime(5)
-                                self.lista[k].ilePieniedzy=2_000
+                                self.lista[k].ilePieniedzy = 2_000
 
                         if self.lista[k].getActive():
                             print(self.lista[k].getIlePusta(), " KASA NR ", k, " STOI TYLE RUND PUSTA")
@@ -147,10 +170,7 @@ class Simulation:
                         if self.lista[k].getActive() and self.lista[k].getObsluga():
                             self.generujWypadek(self.lista[k].obslugiwany, self.lista[k])
 
-                        
-                        #tutaj sie konczy obsluga klienta
-                        
-
+                        # tutaj sie konczy obsluga klienta
 
                         print(f"{self.lista[k].getActive()} ILOSC TRANSKACJI : {self.lista[k].getIloscTransakcji()}")
                         # sprawdza czy jest awaria, jesli jest to odejmuje minute od czas serwisu, jesli serwis
@@ -162,10 +182,11 @@ class Simulation:
                             if self.lista[k].serwis == 0:
                                 self.lista[k].awariaStop()
                                 self.lista[k].otworzKase()
-                        
+
                 self.zapiszStatystykiGodzinowe(dzien, godziny)
                 print(self.statystyki)
         self.pokazStatystyki()
+        self.gui.run()
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
         if klient.exists:
@@ -177,19 +198,22 @@ class Simulation:
             kasa.setstopTime(random.randint(0, 2))
             print(f"WYPADEK random")
 
-    
-
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
-        #W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
-        #wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
-        statyGodzinowe = (self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz-self.klienciKobietyGodz,self.sredniWiekGodz/self.klienciWszyscyGodz,self.klienciKartaGodz,self.klienciWszyscyGodz-self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz, self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz-self.klienciPolacyGodz, self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz)
-        pomoc=(dzien + 1, godzina + 1, statyGodzinowe)
+        # W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
+        # wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
+        statyGodzinowe = (
+        self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
+        self.sredniWiekGodz / self.klienciWszyscyGodz, self.klienciKartaGodz,
+        self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
+        self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
+        self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz)
+        pomoc = (dzien + 1, godzina + 1, statyGodzinowe)
         self.statystyki.append(pomoc)
 
     def generujKlienta(self, tlum: bool):
         if tlum:
             print(f"Tlum")
-            maxLosowanie = 7 # zmienna okreslajaca maksymalna skrajna liczbe do losowania ilosci klientow
+            maxLosowanie = 7  # zmienna okreslajaca maksymalna skrajna liczbe do losowania ilosci klientow
             minLosowanie = 3
         else:
             maxLosowanie = 3
@@ -198,25 +222,25 @@ class Simulation:
             # tutaj wlatuje statystyczny check:
             pomocniczyklient = Klient(self.klienciWszyscy)
             self.klienciWszyscy += 1
-            self.klienciWszyscyGodz+=1
-            self.klienciWszyscyDzien+=1
+            self.klienciWszyscyGodz += 1
+            self.klienciWszyscyDzien += 1
             if pomocniczyklient.karta == 1:
                 self.klienciKarta += 1
-                self.klienciKartaGodz +=1
-                self.klienciKartaDzien+=1
+                self.klienciKartaGodz += 1
+                self.klienciKartaDzien += 1
             if pomocniczyklient.plastik == 1:
                 self.klienciPlastik += 1
-                self.klienciPlastikGodz+=1
-                self.klienciPlastikDzien+=1
+                self.klienciPlastikGodz += 1
+                self.klienciPlastikDzien += 1
             if pomocniczyklient.polak != 1:
                 self.klienciPolacy += 1
                 self.klienciPolacyGodz += 1
                 self.klienciPolacyDzien += 1
-            if pomocniczyklient.kobieta==1:
+            if pomocniczyklient.kobieta == 1:
                 self.klienciKobiety += 1
-                self.klienciKobietyDzien +=1
-                self.klienciKobietyGodz+=1
-            if pomocniczyklient.wroclaw== 1:
+                self.klienciKobietyDzien += 1
+                self.klienciKobietyGodz += 1
+            if pomocniczyklient.wroclaw == 1:
                 self.klienciWroclaw += 1
                 self.klienciWroclawDzien += 1
                 self.klienciWroclawGodz += 1
@@ -228,9 +252,7 @@ class Simulation:
             self.klientela.append(pomocniczyklient)
             print(f"{self.klientela[client].czasObslugi}, CZAS OBSLUGI KLIENTA NR: {client}")
 
-
-
-# tutaj trzeba zmienic 
+    # tutaj trzeba zmienic
     def pokazStatystyki(self):
         print(f"Wszyscy klienci: {self.klienciWszyscy}")
         print(f"Klienci placacy karta: {self.klienciKarta}")
@@ -239,7 +261,7 @@ class Simulation:
         print(f"Klienci aplikacja: {self.klienciAplikacja}")
         print(f"Klienci polacy: {self.klienciPolacy}")
         print(f"Ile kobiet kupiło w sklepie: {self.klienciKobiety}")
-        print(f"Ile mężczyzn było w sklepie: {self.klienciWszyscy-self.klienciKobiety}")
-        print(f"sredni wiek klienta: {self.sredniWiek/self.klienciWszyscy}")
+        print(f"Ile mężczyzn było w sklepie: {self.klienciWszyscy - self.klienciKobiety}")
+        print(f"sredni wiek klienta: {self.sredniWiek / self.klienciWszyscy}")
         print(f"Klienci z wrocławia: {self.klienciWroclaw}")
-        print(f"Klienci z poza wrocławia: {self.klienciWszyscy-self.klienciWroclaw}")
+        print(f"Klienci z poza wrocławia: {self.klienciWszyscy - self.klienciWroclaw}")

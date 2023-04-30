@@ -4,10 +4,15 @@ import random
 class Klient:
 
 
-    def __init__(self,idTransakcji: int):
+    def __init__(self,idTransakcji: int, ):
         # false=0 i chyba cała reszta, true=1
         kolor = "black"
         self.exists = True
+        #jesli klient jest problematyczny to zajmuje więcej czasu
+        '''if random.randint(0,problematyczność)==0:
+            self.czasObslugi= random.randint(5,12)
+        else:
+            self.czasObslugi = random.randint(1, 2)'''
         self.czasObslugi = random.randint(1, 2)
         self.polak=random.randint(0, 5)
         self.idTransakcji=idTransakcji
