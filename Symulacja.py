@@ -61,6 +61,9 @@ class Simulation:
 
     def simulatione(self, dniPracy: int, godzinyPracy):
         for dzien in range(dniPracy):
+            #GUI wyswietlanie dnia tygodnia
+            self.gui.display_days(dzien % 7)
+
             self.dziejeSie = False
             self.lastCall = False
             self.klienciWszyscyDzien = 0
@@ -87,7 +90,6 @@ class Simulation:
                     self.dziejeSie = False
                 for i in range(60):
                     #GUI petla do sprawdzenia koloru kas
-                    time.sleep(0.2)
                     for k in range (len(self.lista)):
                         if self.lista[k].getActive():
                             self.gui.kasa_change_color(k, "green")
@@ -97,6 +99,7 @@ class Simulation:
                             self.gui.kasa_change_color(k, "gray")
                         if self.lista[k].getWypadek():
                             self.gui.kasa_change_color(k, "orange")
+                    self.gui.display_numbers(godziny + 8, i)
 
                     print(f"{i + 1},  ITERACJA")
                     # ostatnie 20 minut przed klienci nie przychodza
@@ -130,7 +133,7 @@ class Simulation:
                     # GUI petla do klientow przy kasie
                     for k in range(len(self.lista)):
                         self.gui.klienci_change_color(k, self.lista[k].getSize())
-                    time.sleep(0.2)
+                    #time.sleep(0.2)
 
                     if len(self.klientela) != 0:
                         print("Wszystkie kasy zajete")
