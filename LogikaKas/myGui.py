@@ -4,6 +4,7 @@ class MyGui:
     def __init__(self, size: int):
         self.root = tk.Tk()
         self.root.title("Symulacja kas w sklepie")
+        
 
         # Kwadraty czerwone - kasy
         self.squares_big = []
