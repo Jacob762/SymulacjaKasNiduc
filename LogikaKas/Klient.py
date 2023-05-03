@@ -3,30 +3,27 @@ import random
 
 class Klient:
 
-
-    def __init__(self,idTransakcji: int, ):
+    def __init__(self, idTransakcji: int, problematycznosc : bool):
         # false=0 i chyba cała reszta, true=1
         kolor = "black"
         self.exists = True
-        #jesli klient jest problematyczny to zajmuje więcej czasu
-        '''if random.randint(0,problematyczność)==0:
+        # jesli klient jest problematyczny to zajmuje więcej czasu
+        if problematycznosc:
             self.czasObslugi= random.randint(5,12)
+            print(f"PROBLEMATYCZNOSC DZIALA")
         else:
-            self.czasObslugi = random.randint(1, 2)'''
+            self.czasObslugi = random.randint(1, 2)
         self.czasObslugi = random.randint(1, 2)
-        self.polak=random.randint(0, 5)
-        self.idTransakcji=idTransakcji
-        self.rodzina = random.randint(0,5)
-        self.wydatek = random.randint(10, 400)*self.rodzina #  w pln
-        self.karta = random.randint(0,1)
-        if self.karta==1:
-            self.plastik=random.randint(0, 2)# co 3 osoba plastik
-        else :
-            self.plastik=0
-        self.kobieta=random.randint(0, 2)
-        self.wiek= random.randint(10, 93)
-        #skad jest -> wrocław czy okolice :))
-        self.wroclaw=random.randint(0, 2) #zakladam że to większy sklep na obrzeżach typu bielany wrocławskie
-
-
-
+        self.polak = random.randint(0, 5)
+        self.idTransakcji = idTransakcji
+        self.rodzina = random.randint(0, 5)
+        self.wydatek = random.randint(10, 400) * self.rodzina  # w pln
+        self.karta = random.randint(0, 1)
+        if self.karta == 1:
+            self.plastik = random.randint(0, 2)  # co 3 osoba plastik
+        else:
+            self.plastik = 0
+        self.kobieta = random.randint(0, 2)
+        self.wiek = random.randint(10, 93)
+        # skad jest -> wrocław czy okolice :))
+        self.wroclaw = random.randint(0, 2)  # zakladam że to większy sklep na obrzeżach typu bielany wrocławskie
