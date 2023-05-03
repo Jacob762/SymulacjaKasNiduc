@@ -4,6 +4,7 @@ import time
 from LogikaKas.Kasa import Kasa
 from LogikaKas.Klient import Klient
 from LogikaKas.myGui import MyGui
+from matplotlib import pyplot as plt
 
 class Simulation:
     lista = []
@@ -191,7 +192,8 @@ class Simulation:
                 self.zapiszStatystykiGodzinowe(dzien, godziny)
                 print(self.statystyki)
         self.pokazStatystyki()
-        #self.narysujWykres(godzinyPracy, self.klienciWszyscy)
+        # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
+        self.narysujWykres(dniPracy, )
         self.gui.run()
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
@@ -277,6 +279,12 @@ class Simulation:
         print(f"Klienci z wrocławia: {self.klienciWroclaw}")
         print(f"Klienci z poza wrocławia: {self.klienciWszyscy - self.klienciWroclaw}")
 
-
-    #def narysujWykres(self, x : int, y : int):
-        #plt.plot(range(x), y)
+    def narysujWykres(self, x, y):
+        list = []
+        for i in range(x):
+            list.append(i)
+        plt.plot(list, y)
+        plt.title('Nazwa wykresu')
+        plt.xlabel('Dni')
+        plt.ylabel('Wartosc y')
+        plt.savefig('Xd')
