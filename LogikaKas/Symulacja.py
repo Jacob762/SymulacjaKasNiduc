@@ -10,6 +10,7 @@ class Simulation:
     lista = []
     klientela = []
     statystyki = []
+    statystykiDzienne = []
     lastCall = False  # zmienna do okreslania ostatnich 20 minut w sklepie
     dziejeSie = False  # zmienna do okreslania wiekszego natloku klientow w dni robocze
     # atrybuty poczatkowe
@@ -192,6 +193,7 @@ class Simulation:
                 self.zapiszStatystykiGodzinowe(dzien, godziny)
                 print(self.statystyki)
         self.pokazStatystyki()
+        self.zapiszStatystykiDzienne(dzien)
         # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
         self.narysujWykres(dniPracy, )
         self.gui.run()
@@ -206,16 +208,28 @@ class Simulation:
             kasa.setstopTime(random.randint(0, 2))
             print(f"WYPADEK random")
 
+    def zapiszStatystykiDzienne(self, dzien):
+        statyDzienne= [
+            self.klienciWszyscyDzien, self.klienciKobietyDzien, self.klienciWszyscyDzien - self.klienciKobietyDzien,
+        self.sredniWiekDzien / self.klienciWszyscyDzien, self.klienciKartaDzien,
+        self.klienciWszyscyDzien - self.klienciKartaDzien, self.klienciWszyscyDzien - self.klienciPlastikDzien,
+        self.klienciPlastikDzien, self.klienciPolacyDzien, self.klienciWszyscyDzien - self.klienciPolacyDzien,
+        self.klienciWroclawDzien, self.klienciWszyscyDzien - self.klienciWroclawDzien
+            ]
+        pomoc = [dzien + 1, statyDzienne]
+        self.statystykiDzienne.append(pomoc)
+        
+
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
         # W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
         # wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
-        statyGodzinowe = (
+        statyGodzinowe = [
         self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
         self.sredniWiekGodz / self.klienciWszyscyGodz, self.klienciKartaGodz,
         self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
         self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
-        self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz)
-        pomoc = (dzien + 1, godzina + 1, statyGodzinowe)
+        self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
+        pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
         self.statystyki.append(pomoc)
 
     def generujKlienta(self, tlum: bool, problematycznosc: int):
