@@ -13,9 +13,7 @@ class Simulation:
     statystykiDzienne = []
     lastCall = False  # zmienna do okreslania ostatnich 20 minut w sklepie
     dziejeSie = False  # zmienna do okreslania wiekszego natloku klientow w dni robocze
-    # atrybuty poczatkowe
-    #zmieniłem na 300 bo 30 to trochę xD a i tak powinno być z 10_000
-    #do testowania wygodniej 30 ale na release jednak jak wyżej
+    # atrybuty poczatkowe:    
     maxIloscTransakcji = 30
     czasSerwisowania = 10
     licznikProblematycznosci = 0
@@ -40,7 +38,7 @@ class Simulation:
     awarie = 0
     przepelnienieKas = 0
     # statystyki dzienne
-    # tak w sumie to nwm czy są potrzebne wgl bo zawsze mozna zsumować godzinowe wiec tutaj nwm
+    
     klienciWszyscyDzien = 0
     klienciKartaDzien = 0
     klienciPlastikDzien = 0
@@ -195,7 +193,8 @@ class Simulation:
         self.pokazStatystyki()
         self.zapiszStatystykiDzienne(dzien)
         # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
-        self.narysujWykres(dniPracy, )
+        #DO DOPRACOWANIA
+        #self.narysujWykres(dniPracy, self.statystykiDzienne)
         self.gui.run()
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
@@ -221,9 +220,10 @@ class Simulation:
         
 
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
-        # W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
+        
         # wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
         statyGodzinowe = [
+            self.awarie,self.przepelnienieKas,
         self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
         self.sredniWiekGodz / self.klienciWszyscyGodz, self.klienciKartaGodz,
         self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
