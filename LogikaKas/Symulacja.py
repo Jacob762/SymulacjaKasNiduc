@@ -77,6 +77,8 @@ class Simulation:
             self.klienciKobietyDzien = 0
             self.sredniWiekDzien = 0
             self.klienciWroclawDzien = 0
+            self.awarie = 0
+            self.przepelnienieKas = 0
             # statysyki dzienne
             print(f"DZIEN {dzien}")
             for godziny in range(godzinyPracy):
@@ -88,8 +90,7 @@ class Simulation:
                 self.klienciKobietyGodz = 0
                 self.sredniWiekGodz = 0
                 self.klienciWroclawGodz = 0
-                self.awarie = 0
-                self.przepelnienieKas = 0
+
                 if godziny + 7 == 12 or godziny + 7 == 16:  # miedzy 12 a 14 i miedzy 16 a 18 wzmozona aktywnosc ludzi
                     self.dziejeSie = True
                 elif godziny + 7 == 14 or godziny + 7 == 18:
@@ -139,7 +140,7 @@ class Simulation:
                     # GUI petla do klientow przy kasie
                     for k in range(len(self.lista)):
                         self.gui.klienci_change_color(k, self.lista[k].getSize())
-                    time.sleep(0.2)
+                 #   time.sleep(0.2)    odkomentowanie przywraca normalne dzialanie gui
 
                     if len(self.klientela) != 0:
                         print("Wszystkie kasy zajete")
@@ -192,11 +193,12 @@ class Simulation:
 
                 self.zapiszStatystykiGodzinowe(dzien, godziny)
                 print(self.statystyki)
-        self.pokazStatystyki()
-        self.zapiszStatystykiDzienne(dzien)
-        # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
-        self.narysujWykres(dniPracy, )
-        self.gui.run()
+            self.pokazStatystyki()
+            self.zapiszStatystykiDzienne()
+        # self.gui.run()
+    # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
+        self.narysujWykres(dniPracy, self.statystykiDzienne)
+
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
         if klient.exists:
@@ -208,16 +210,17 @@ class Simulation:
             kasa.setstopTime(random.randint(0, 2))
             print(f"WYPADEK random")
 
-    def zapiszStatystykiDzienne(self, dzien):
+    def zapiszStatystykiDzienne(self):
         statyDzienne= [
             self.klienciWszyscyDzien, self.klienciKobietyDzien, self.klienciWszyscyDzien - self.klienciKobietyDzien,
         self.sredniWiekDzien / self.klienciWszyscyDzien, self.klienciKartaDzien,
         self.klienciWszyscyDzien - self.klienciKartaDzien, self.klienciWszyscyDzien - self.klienciPlastikDzien,
         self.klienciPlastikDzien, self.klienciPolacyDzien, self.klienciWszyscyDzien - self.klienciPolacyDzien,
-        self.klienciWroclawDzien, self.klienciWszyscyDzien - self.klienciWroclawDzien
+        self.klienciWroclawDzien, self.klienciWszyscyDzien - self.klienciWroclawDzien,
+        self.awarie, self.przepelnienieKas
             ]
-        pomoc = [dzien + 1, statyDzienne]
-        self.statystykiDzienne.append(pomoc)
+        self.statystykiDzienne.append(statyDzienne)
+
         
 
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
@@ -229,8 +232,8 @@ class Simulation:
         self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
         self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
         self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
-        pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
-        self.statystyki.append(pomoc)
+        # pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
+        self.statystyki.append(statyGodzinowe)
 
     def generujKlienta(self, tlum: bool, problematycznosc: int):
         if tlum:
@@ -293,12 +296,146 @@ class Simulation:
         print(f"Klienci z wrocławia: {self.klienciWroclaw}")
         print(f"Klienci z poza wrocławia: {self.klienciWszyscy - self.klienciWroclaw}")
 
-    def narysujWykres(self, x, y):
-        list = []
+    def narysujWykres(self, x, dane):
+        temp = []
+        warx = []
         for i in range(x):
-            list.append(i)
-        plt.plot(list, y)
-        plt.title('Nazwa wykresu')
+            warx.append(i)
+        fig = plt.figure("Wykres 1")
+        for i in range(x):
+            temp.append(dane[0][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientow w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Wartosc y')
-        plt.savefig('Xd')
+        plt.ylabel('Wszyscy klienci danego dnia')
+        plt.savefig(f"Wykres 1")
+        fig = plt.figure("Wykres 2")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[1][i]) # trzeba ogarnac append
+        plt.plot(warx, temp)
+        plt.title('Ilosc kobiet w sklepie w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Ilosc kobiet danego dnia')
+        plt.savefig(f"Wykres 2")
+        fig = plt.figure("Wykres 3")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[2][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc mezczyzn w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Ilosc  mezczyzn danego dnia')
+        plt.savefig(f"Wykres 3")
+        fig = plt.figure("Wykres 4")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[3][i])
+        plt.plot(warx, temp)
+        plt.title('Sredni wiek w przeciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Sredni wiek danego dnia danego dnia')
+        plt.savefig(f"Wykres 4")
+        fig = plt.figure("Wykres 5")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[4][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientow placacych karta w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Platnosci gotowka danego dnia')
+        plt.savefig(f"Wykres 5")
+        fig = plt.figure("Wykres 6")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[5][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientow placacych gotowka w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Platnosci telefonem danego dnia')
+        plt.savefig(f"Wykres 1")
+        fig = plt.figure("Wykres 7")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[6][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientow placacych telefonem w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Platnosci fizyczna karta danego dnia')
+        plt.savefig(f"Wykres 7")
+        fig = plt.figure("Wykres 8")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[7][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientow placacych plastkiowa karta w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Wszyscy polacy danego dnia')
+        plt.savefig(f"Wykres 1")
+        fig = plt.figure("Wykres 9")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[8][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc polakow w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Wszyscy obcokrajowcy danego dnia')
+        plt.savefig(f"Wykres 9")
+        fig = plt.figure("Wykres 10")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append(dane[9][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc obcokrajowcow w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Wszyscy klienci z Wroclawia danego dnia')
+        plt.savefig(f"Wykres 10")
+        fig = plt.figure("Wykres 11")
+        for i in range(x):
+            temp.pop()
+        for i in range(len(dane[10])):
+            temp.append(dane[10][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientow z Wroclawia w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Wszyscy klienci spoza Wroclawia danego dnia')
+        plt.savefig(f"Wykres 11")
+        fig = plt.figure("Wykres 12")
+        for i in range(x):
+            temp.pop()
+        for i in range(len(dane[11])):
+            temp.append(dane[11][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc klientu spoza Wroclawia w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Wszyscy klienci danego dnia')
+        plt.savefig(f"Wykres 12")
+        fig = plt.figure("Wykres 13")
+        for i in range(x):
+            temp.pop()
+        for i in range(len(dane[12])):
+            temp.append(dane[12][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc awarii w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Wszystkie awarie danego dnia')
+        plt.savefig(f"Wykres 13")
+        fig = plt.figure("Wykres 14")
+        for i in range(x):
+            temp.pop()
+        for i in range(len(dane[13])):
+            temp.append(dane[13][i])
+        plt.plot(warx, temp)
+        plt.title('Ilosc przepelnienia kas w ciagu x dni')
+        plt.xlabel('Dni')
+        plt.ylabel('Przepelnienia kas danego dnia')
+        plt.savefig(f"Wykres 14")
