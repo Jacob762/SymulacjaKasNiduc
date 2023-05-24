@@ -6,6 +6,7 @@ from LogikaKas.Klient import Klient
 from LogikaKas.myGui import MyGui
 from matplotlib import pyplot as plt
 
+
 class Simulation:
     lista = []
     klientela = []
@@ -14,8 +15,8 @@ class Simulation:
     lastCall = False  # zmienna do okreslania ostatnich 20 minut w sklepie
     dziejeSie = False  # zmienna do okreslania wiekszego natloku klientow w dni robocze
     # atrybuty poczatkowe
-    #zmieniłem na 300 bo 30 to trochę xD a i tak powinno być z 10_000
-    #do testowania wygodniej 30 ale na release jednak jak wyżej
+    # zmieniłem na 300 bo 30 to trochę xD a i tak powinno być z 10_000
+    # do testowania wygodniej 30 ale na release jednak jak wyżej
     maxIloscTransakcji = 30
     czasSerwisowania = 10
     licznikProblematycznosci = 0
@@ -49,12 +50,13 @@ class Simulation:
     sredniWiekDzien = 0
     klienciWroclawDzien = 0
 
-    def __init__(self, iloscKas: int,dniPracy: int, godzinyPracy: int , awaryjnoscKasy: int, problematycznosc: int):
+    def __init__(self, iloscKas: int, dniPracy: int, godzinyPracy: int, awaryjnoscKasy: int, problematycznosc: int):
         self.start(iloscKas)
         self.gui = MyGui(iloscKas)
+        self.maxIloscTransakcji = awaryjnoscKasy
         self.simulatione(dniPracy, godzinyPracy, problematycznosc)
-        #Poniżej jeśli ustawiamy prawdopodobieństwo awarii kasy na 20 to awaria nastąpi 20% szybciej:
-        self.maxIloscTransakcji*=(100-awaryjnoscKasy)/100
+        # Poniżej jeśli ustawiamy prawdopodobieństwo awarii kasy na 20 to awaria nastąpi 20% szybciej:
+
 
     # Dodaje ilosc kas po czym inicjalizuje pierwszą kase:
     def start(self, iloscKas: int):
@@ -96,9 +98,9 @@ class Simulation:
                 elif godziny + 7 == 14 or godziny + 7 == 18:
                     self.dziejeSie = False
                 for i in range(60):
-                    #GUI petla do sprawdzenia koloru kas
+                    # GUI petla do sprawdzenia koloru kas
                     # time.sleep(0.2)
-                    for k in range (len(self.lista)):
+                    for k in range(len(self.lista)):
                         if self.lista[k].getActive():
                             self.gui.kasa_change_color(k, "green")
                         if not self.lista[k].getActive():
@@ -140,11 +142,11 @@ class Simulation:
                     # GUI petla do klientow przy kasie
                     for k in range(len(self.lista)):
                         self.gui.klienci_change_color(k, self.lista[k].getSize())
-                 #   time.sleep(0.2)    odkomentowanie przywraca normalne dzialanie gui
+                    #   time.sleep(0.2)    odkomentowanie przywraca normalne dzialanie gui
 
                     if len(self.klientela) != 0:
                         print("Wszystkie kasy zajete")
-                        self.przepelnienieKas+=1 # liczymy przepelnienie kas
+                        self.przepelnienieKas += 1  # liczymy przepelnienie kas
                     # obsluga klienta
                     for k in range(len(self.lista)):
                         # trzeba dodac zeby tylko aktywne kasy obslugiwaly klientow
@@ -158,7 +160,7 @@ class Simulation:
                                 self.lista[k].zamknijKase(self.klientela)
                                 self.lista[k].awariaStart(self.czasSerwisowania)
                                 print(f"AWARIA KASY NR {k}, CZAS SERWISOWANIA: {self.czasSerwisowania}")
-                                self.awarie+=1 # liczymy awarie
+                                self.awarie += 1  # liczymy awarie
                         # obsluga klienta
                         self.lista[k].obsluzKlienta()
                         if self.lista[k].obslugiwany == self.lista[k].straznik:
@@ -196,9 +198,8 @@ class Simulation:
             self.pokazStatystyki()
             self.zapiszStatystykiDzienne()
         # self.gui.run()
-    # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
+        # funkcja do wykresu, pierwszy atrybut to dni pracy a drugi to lista do osi y, jej dlugosc musi byc rowna dniom pracy
         self.narysujWykres(dniPracy, self.statystykiDzienne)
-
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
         if klient.exists:
@@ -211,27 +212,29 @@ class Simulation:
             print(f"WYPADEK random")
 
     def zapiszStatystykiDzienne(self):
-        statyDzienne= [
+        statyDzienne = [
             self.klienciWszyscyDzien, self.klienciKobietyDzien, self.klienciWszyscyDzien - self.klienciKobietyDzien,
-        self.sredniWiekDzien / self.klienciWszyscyDzien, self.klienciKartaDzien,
-        self.klienciWszyscyDzien - self.klienciKartaDzien, self.klienciWszyscyDzien - self.klienciPlastikDzien,
-        self.klienciPlastikDzien, self.klienciPolacyDzien, self.klienciWszyscyDzien - self.klienciPolacyDzien,
-        self.klienciWroclawDzien, self.klienciWszyscyDzien - self.klienciWroclawDzien,
-        self.awarie, self.przepelnienieKas
-            ]
+                                                                self.sredniWiekDzien / self.klienciWszyscyDzien,
+            self.klienciKartaDzien,
+                                                                self.klienciWszyscyDzien - self.klienciKartaDzien,
+                                                                self.klienciWszyscyDzien - self.klienciPlastikDzien,
+            self.klienciPlastikDzien, self.klienciPolacyDzien, self.klienciWszyscyDzien - self.klienciPolacyDzien,
+            self.klienciWroclawDzien, self.klienciWszyscyDzien - self.klienciWroclawDzien,
+            self.awarie, self.przepelnienieKas
+        ]
         self.statystykiDzienne.append(statyDzienne)
-
-        
 
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
         # W RAZIE POMYSŁÓW TUTAJ DODAWAĆ!!
         # wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
         statyGodzinowe = [
-        self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
-        self.sredniWiekGodz / self.klienciWszyscyGodz, self.klienciKartaGodz,
-        self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
-        self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
-        self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
+            self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
+                                                              self.sredniWiekGodz / self.klienciWszyscyGodz,
+            self.klienciKartaGodz,
+                                                              self.klienciWszyscyGodz - self.klienciKartaGodz,
+                                                              self.klienciWszyscyGodz - self.klienciPlastikGodz,
+            self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
+            self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
         # pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
         self.statystyki.append(statyGodzinowe)
 
@@ -250,7 +253,7 @@ class Simulation:
                 self.licznikProblematycznosci = 0
             else:
                 pomocniczyklient = Klient(self.klienciWszyscy, False)
-                self.licznikProblematycznosci+=1
+                self.licznikProblematycznosci += 1
             self.klienciWszyscy += 1
             self.klienciWszyscyGodz += 1
             self.klienciWszyscyDzien += 1
@@ -296,6 +299,7 @@ class Simulation:
         print(f"Klienci z wrocławia: {self.klienciWroclaw}")
         print(f"Klienci z poza wrocławia: {self.klienciWszyscy - self.klienciWroclaw}")
         print(f"Ilosc awarii: {self.awarie}")
+
     def narysujWykres(self, x, dane):
         temp = []
         warx = []
@@ -313,7 +317,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[i][1]) # trzeba ogarnac append
+            temp.append(dane[i][1])  # trzeba ogarnac append
         plt.plot(warx, temp)
         plt.title('Ilosc kobiet w sklepie w ciagu x dni')
         plt.xlabel('Dni')
@@ -378,7 +382,7 @@ class Simulation:
         plt.title('Ilosc klientow placacych plastkiowa karta w ciagu x dni')
         plt.xlabel('Dni')
         plt.ylabel('Wszyscy polacy danego dnia')
-        plt.savefig(f"Wykres 1")
+        plt.savefig(f"Wykres 8")
         fig = plt.figure("Wykres 9")
         for i in range(x):
             temp.pop()
