@@ -295,7 +295,7 @@ class Simulation:
         print(f"sredni wiek klienta: {self.sredniWiek / self.klienciWszyscy}")
         print(f"Klienci z wrocławia: {self.klienciWroclaw}")
         print(f"Klienci z poza wrocławia: {self.klienciWszyscy - self.klienciWroclaw}")
-
+        print(f"Ilosc awarii: {self.awarie}")
     def narysujWykres(self, x, dane):
         temp = []
         warx = []
@@ -303,7 +303,7 @@ class Simulation:
             warx.append(i)
         fig = plt.figure("Wykres 1")
         for i in range(x):
-            temp.append(dane[0][i])
+            temp.append(dane[i][0])
         plt.plot(warx, temp)
         plt.title('Ilosc klientow w ciagu x dni')
         plt.xlabel('Dni')
@@ -313,7 +313,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[1][i]) # trzeba ogarnac append
+            temp.append(dane[i][1]) # trzeba ogarnac append
         plt.plot(warx, temp)
         plt.title('Ilosc kobiet w sklepie w ciagu x dni')
         plt.xlabel('Dni')
@@ -323,7 +323,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[2][i])
+            temp.append(dane[i][2])
         plt.plot(warx, temp)
         plt.title('Ilosc mezczyzn w ciagu x dni')
         plt.xlabel('Dni')
@@ -333,7 +333,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[3][i])
+            temp.append(dane[i][3])
         plt.plot(warx, temp)
         plt.title('Sredni wiek w przeciagu x dni')
         plt.xlabel('Dni')
@@ -343,7 +343,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[4][i])
+            temp.append(dane[i][4])
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych karta w ciagu x dni')
         plt.xlabel('Dni')
@@ -353,17 +353,17 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[5][i])
+            temp.append(dane[i][5])
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych gotowka w ciagu x dni')
         plt.xlabel('Dni')
         plt.ylabel('Platnosci telefonem danego dnia')
-        plt.savefig(f"Wykres 1")
+        plt.savefig(f"Wykres 6")
         fig = plt.figure("Wykres 7")
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[6][i])
+            temp.append(dane[i][6])
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych telefonem w ciagu x dni')
         plt.xlabel('Dni')
@@ -373,7 +373,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[7][i])
+            temp.append(dane[i][7])
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych plastkiowa karta w ciagu x dni')
         plt.xlabel('Dni')
@@ -383,7 +383,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[8][i])
+            temp.append(dane[i][8])
         plt.plot(warx, temp)
         plt.title('Ilosc polakow w ciagu x dni')
         plt.xlabel('Dni')
@@ -393,7 +393,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append(dane[9][i])
+            temp.append(dane[i][9])
         plt.plot(warx, temp)
         plt.title('Ilosc obcokrajowcow w ciagu x dni')
         plt.xlabel('Dni')
@@ -402,8 +402,8 @@ class Simulation:
         fig = plt.figure("Wykres 11")
         for i in range(x):
             temp.pop()
-        for i in range(len(dane[10])):
-            temp.append(dane[10][i])
+        for i in range(x):
+            temp.append(dane[i][10])
         plt.plot(warx, temp)
         plt.title('Ilosc klientow z Wroclawia w ciagu x dni')
         plt.xlabel('Dni')
@@ -412,8 +412,8 @@ class Simulation:
         fig = plt.figure("Wykres 12")
         for i in range(x):
             temp.pop()
-        for i in range(len(dane[11])):
-            temp.append(dane[11][i])
+        for i in range(x):
+            temp.append(dane[i][11])
         plt.plot(warx, temp)
         plt.title('Ilosc klientu spoza Wroclawia w ciagu x dni')
         plt.xlabel('Dni')
@@ -422,8 +422,8 @@ class Simulation:
         fig = plt.figure("Wykres 13")
         for i in range(x):
             temp.pop()
-        for i in range(len(dane[12])):
-            temp.append(dane[12][i])
+        for i in range(x):
+            temp.append(dane[i][12])
         plt.plot(warx, temp)
         plt.title('Ilosc awarii w ciagu x dni')
         plt.xlabel('Dni')
@@ -432,8 +432,8 @@ class Simulation:
         fig = plt.figure("Wykres 14")
         for i in range(x):
             temp.pop()
-        for i in range(len(dane[13])):
-            temp.append(dane[13][i])
+        for i in range(x):
+            temp.append(dane[i][13])
         plt.plot(warx, temp)
         plt.title('Ilosc przepelnienia kas w ciagu x dni')
         plt.xlabel('Dni')
