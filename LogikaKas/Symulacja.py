@@ -53,7 +53,7 @@ class Simulation:
 
     def __init__(self, iloscKas: int, dniPracy: int, godzinyPracy: int, awaryjnoscKasy: int, problematycznosc: int):
         self.start(iloscKas)
-        self.gui = MyGui(iloscKas)
+      #  self.gui = MyGui(iloscKas)
         self.maxIloscTransakcji = awaryjnoscKasy
         self.simulatione(dniPracy, godzinyPracy, problematycznosc)
         # Poniżej jeśli ustawiamy prawdopodobieństwo awarii kasy na 20 to awaria nastąpi 20% szybciej:
@@ -101,15 +101,15 @@ class Simulation:
                 for i in range(60):
                     # GUI petla do sprawdzenia koloru kas
                     # time.sleep(0.2)
-                    for k in range(len(self.lista)):
-                        if self.lista[k].getActive():
-                            self.gui.kasa_change_color(k, "green")
-                        if not self.lista[k].getActive():
-                            self.gui.kasa_change_color(k, "red")
-                        if self.lista[k].getAwaria():
-                            self.gui.kasa_change_color(k, "gray")
-                        if self.lista[k].getWypadek():
-                            self.gui.kasa_change_color(k, "orange")
+                  #  for k in range(len(self.lista)):
+                     #   if self.lista[k].getActive():
+                       #     self.gui.kasa_change_color(k, "green")
+                      #  if not self.lista[k].getActive():
+                      #      self.gui.kasa_change_color(k, "red")
+                      #  if self.lista[k].getAwaria():
+                     #       self.gui.kasa_change_color(k, "gray")
+                       # if self.lista[k].getWypadek():
+                       #     self.gui.kasa_change_color(k, "orange")
 
                     print(f"{i + 1},  ITERACJA")
                     # ostatnie 20 minut przed klienci nie przychodza
@@ -141,8 +141,8 @@ class Simulation:
                         print(f"CZAS OCZEKIWANIA NA KONIEC WYPADKU: {self.lista[k].stopTime}")
 
                     # GUI petla do klientow przy kasie
-                    for k in range(len(self.lista)):
-                        self.gui.klienci_change_color(k, self.lista[k].getSize())
+                   # for k in range(len(self.lista)):
+                   #     self.gui.klienci_change_color(k, self.lista[k].getSize())
                     #   time.sleep(0.2)    odkomentowanie przywraca normalne dzialanie gui
 
                     if len(self.klientela) != 0:
@@ -194,7 +194,7 @@ class Simulation:
                                 self.lista[k].awariaStop()
                                 self.lista[k].otworzKase()
 
-                self.zapiszStatystykiGodzinowe(dzien, godziny)
+                # self.zapiszStatystykiGodzinowe(dzien, godziny)
                 print(self.statystyki)
             self.pokazStatystyki()
             self.zapiszStatystykiDzienne()
@@ -205,7 +205,7 @@ class Simulation:
 
         #DO DOPRACOWANIA
         #self.narysujWykres(dniPracy, self.statystykiDzienne)
-        self.gui.run()
+       # self.gui.run()
 
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
@@ -245,14 +245,14 @@ class Simulation:
             self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
         # pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
         self.statystyki.append(statyGodzinowe)
-            self.awarie,self.przepelnienieKas,
+        self.awarie,self.przepelnienieKas,
         self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
         self.sredniWiekGodz / self.klienciWszyscyGodz, self.klienciKartaGodz,
         self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
         self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
-        self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
-        pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
-        self.statystyki.append(pomoc)
+        # self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
+        # pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
+       #  self.statystyki.append(pomoc)
 
 
     def generujKlienta(self, tlum: bool, problematycznosc: int):
@@ -460,3 +460,33 @@ class Simulation:
         plt.xlabel('Dni')
         plt.ylabel('Przepelnienia kas danego dnia')
         plt.savefig(f"Wykres 14")
+        fig = plt.figure("Wykres 15")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append((dane[i][12]/dane[i][0])*100)
+        plt.plot(warx, temp)
+        plt.title('Stosunek awarii do wykonanych transakcji w ciagu x dni (%)')
+        plt.xlabel('Dni')
+        plt.ylabel('Awarie/ilosc transakcji danego dnia')
+        plt.savefig(f"Wykres 15")
+        fig = plt.figure("Wykres 16")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append((dane[i][13] / dane[i][0]) * 100)
+        plt.plot(warx, temp)
+        plt.title('Stosunek przepelnienia kas do wykonanych transakcji w ciagu x dni (%)')
+        plt.xlabel('Dni')
+        plt.ylabel('Przepelnienie kas/ilosc transakcji danego dnia')
+        plt.savefig(f"Wykres 16")
+        fig = plt.figure("Wykres 17")
+        for i in range(x):
+            temp.pop()
+        for i in range(x):
+            temp.append((dane[i][13] / dane[i][12])*100)
+        plt.plot(warx, temp)
+        plt.title('Stosunek przepelnienia kas do awarii w ciagu x dni (%)')
+        plt.xlabel('Dni')
+        plt.ylabel('Przepelnienie kas/ilosc awarii danego dnia')
+        plt.savefig(f"Wykres 17")

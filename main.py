@@ -1,7 +1,7 @@
 from LogikaKas.Symulacja import Simulation
 
 if __name__ == "__main__":
-    sim = Simulation(4,8,10,100,20)
+    sim = Simulation(10,708,12,100,10)
 
 
 
