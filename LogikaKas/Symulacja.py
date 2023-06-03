@@ -18,8 +18,8 @@ class Simulation:
     # zmieniłem na 300 bo 30 to trochę xD a i tak powinno być z 10_000
     # do testowania wygodniej 30 ale na release jednak jak wyżej
     # atrybuty poczatkowe:    
-    maxIloscTransakcji = 30
-    czasSerwisowania = 10
+    maxIloscTransakcji = 10000
+    czasSerwisowania = 480
     licznikProblematycznosci = 0
     # statystyki dotyczące klientów
     # statystyki ogólne
@@ -42,7 +42,7 @@ class Simulation:
     awarie = 0
     przepelnienieKas = 0
     # statystyki dzienne
-    
+
     klienciWszyscyDzien = 0
     klienciKartaDzien = 0
     klienciPlastikDzien = 0
@@ -53,11 +53,10 @@ class Simulation:
 
     def __init__(self, iloscKas: int, dniPracy: int, godzinyPracy: int, awaryjnoscKasy: int, problematycznosc: int):
         self.start(iloscKas)
-      #  self.gui = MyGui(iloscKas)
+        #  self.gui = MyGui(iloscKas)
         self.maxIloscTransakcji = awaryjnoscKasy
         self.simulatione(dniPracy, godzinyPracy, problematycznosc)
         # Poniżej jeśli ustawiamy prawdopodobieństwo awarii kasy na 20 to awaria nastąpi 20% szybciej:
-
 
     # Dodaje ilosc kas po czym inicjalizuje pierwszą kase:
     def start(self, iloscKas: int):
@@ -101,15 +100,15 @@ class Simulation:
                 for i in range(60):
                     # GUI petla do sprawdzenia koloru kas
                     # time.sleep(0.2)
-                  #  for k in range(len(self.lista)):
-                     #   if self.lista[k].getActive():
-                       #     self.gui.kasa_change_color(k, "green")
-                      #  if not self.lista[k].getActive():
-                      #      self.gui.kasa_change_color(k, "red")
-                      #  if self.lista[k].getAwaria():
-                     #       self.gui.kasa_change_color(k, "gray")
-                       # if self.lista[k].getWypadek():
-                       #     self.gui.kasa_change_color(k, "orange")
+                    #  for k in range(len(self.lista)):
+                    #   if self.lista[k].getActive():
+                    #     self.gui.kasa_change_color(k, "green")
+                    #  if not self.lista[k].getActive():
+                    #      self.gui.kasa_change_color(k, "red")
+                    #  if self.lista[k].getAwaria():
+                    #       self.gui.kasa_change_color(k, "gray")
+                    # if self.lista[k].getWypadek():
+                    #     self.gui.kasa_change_color(k, "orange")
 
                     print(f"{i + 1},  ITERACJA")
                     # ostatnie 20 minut przed klienci nie przychodza
@@ -141,8 +140,8 @@ class Simulation:
                         print(f"CZAS OCZEKIWANIA NA KONIEC WYPADKU: {self.lista[k].stopTime}")
 
                     # GUI petla do klientow przy kasie
-                   # for k in range(len(self.lista)):
-                   #     self.gui.klienci_change_color(k, self.lista[k].getSize())
+                    # for k in range(len(self.lista)):
+                    #     self.gui.klienci_change_color(k, self.lista[k].getSize())
                     #   time.sleep(0.2)    odkomentowanie przywraca normalne dzialanie gui
 
                     if len(self.klientela) != 0:
@@ -203,10 +202,10 @@ class Simulation:
 
         self.narysujWykres(dniPracy, self.statystykiDzienne)
 
-        #DO DOPRACOWANIA
-        #self.narysujWykres(dniPracy, self.statystykiDzienne)
-       # self.gui.run()
+        # DO DOPRACOWANIA
+        # self.narysujWykres(dniPracy, self.statystykiDzienne)
 
+    # self.gui.run()
 
     def generujWypadek(self, klient: Klient, kasa: Kasa):
         if klient.exists:
@@ -232,7 +231,7 @@ class Simulation:
         self.statystykiDzienne.append(statyDzienne)
 
     def zapiszStatystykiGodzinowe(self, dzien, godzina):
-        
+
         # wszyscy[0],karta[1], kobiety, meżczyźni, sredniwiek,bez karty, aplikacja, plastik, polacy, niepolacy, klienci z wrocławia, klienci z nieWrocławia
         statyGodzinowe = [
 
@@ -245,23 +244,23 @@ class Simulation:
             self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
         # pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
         self.statystyki.append(statyGodzinowe)
-        self.awarie,self.przepelnienieKas,
+        self.awarie, self.przepelnienieKas,
         self.klienciWszyscyGodz, self.klienciKobietyGodz, self.klienciWszyscyGodz - self.klienciKobietyGodz,
         self.sredniWiekGodz / self.klienciWszyscyGodz, self.klienciKartaGodz,
         self.klienciWszyscyGodz - self.klienciKartaGodz, self.klienciWszyscyGodz - self.klienciPlastikGodz,
         self.klienciPlastikGodz, self.klienciPolacyGodz, self.klienciWszyscyGodz - self.klienciPolacyGodz,
         # self.klienciWroclawGodz, self.klienciWszyscyGodz - self.klienciWroclawGodz]
         # pomoc = [dzien + 1, godzina + 1, statyGodzinowe]
-       #  self.statystyki.append(pomoc)
 
+    #  self.statystyki.append(pomoc)
 
     def generujKlienta(self, tlum: bool, problematycznosc: int):
         if tlum:
             print(f"Tlum")
-            maxLosowanie = 7  # zmienna okreslajaca maksymalna skrajna liczbe do losowania ilosci klientow
+            maxLosowanie = 5  # zmienna okreslajaca maksymalna skrajna liczbe do losowania ilosci klientow
             minLosowanie = 3
         else:
-            maxLosowanie = 3
+            maxLosowanie = 2
             minLosowanie = 0
         for client in range(random.randint(minLosowanie, maxLosowanie)):
             # tutaj wlatuje statystyczny check:
@@ -348,7 +347,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc mezczyzn w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Ilosc  mezczyzn danego dnia')
+        plt.ylabel('Ilosc mezczyzn danego dnia')
         plt.savefig(f"Wykres 3")
         fig = plt.figure("Wykres 4")
         for i in range(x):
@@ -368,7 +367,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych karta w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Platnosci gotowka danego dnia')
+        plt.ylabel('Platnosci karta danego dnia')
         plt.savefig(f"Wykres 5")
         fig = plt.figure("Wykres 6")
         for i in range(x):
@@ -378,7 +377,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych gotowka w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Platnosci telefonem danego dnia')
+        plt.ylabel('Platnosci gotowka danego dnia')
         plt.savefig(f"Wykres 6")
         fig = plt.figure("Wykres 7")
         for i in range(x):
@@ -388,7 +387,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych telefonem w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Platnosci fizyczna karta danego dnia')
+        plt.ylabel('Platnosci telefonem danego dnia')
         plt.savefig(f"Wykres 7")
         fig = plt.figure("Wykres 8")
         for i in range(x):
@@ -398,7 +397,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc klientow placacych plastkiowa karta w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Wszyscy polacy danego dnia')
+        plt.ylabel('Platnosci fizyczna karta danego dnia')
         plt.savefig(f"Wykres 8")
         fig = plt.figure("Wykres 9")
         for i in range(x):
@@ -408,7 +407,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc polakow w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Wszyscy obcokrajowcy danego dnia')
+        plt.ylabel('Wszyscy polacy danego dnia')
         plt.savefig(f"Wykres 9")
         fig = plt.figure("Wykres 10")
         for i in range(x):
@@ -418,7 +417,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc obcokrajowcow w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Wszyscy klienci z Wroclawia danego dnia')
+        plt.ylabel('Wszyscy obcokrajowcy danego dnia')
         plt.savefig(f"Wykres 10")
         fig = plt.figure("Wykres 11")
         for i in range(x):
@@ -428,7 +427,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc klientow z Wroclawia w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Wszyscy klienci spoza Wroclawia danego dnia')
+        plt.ylabel('Wszyscy klienci z Wroclawia danego dnia')
         plt.savefig(f"Wykres 11")
         fig = plt.figure("Wykres 12")
         for i in range(x):
@@ -438,7 +437,7 @@ class Simulation:
         plt.plot(warx, temp)
         plt.title('Ilosc klientu spoza Wroclawia w ciagu x dni')
         plt.xlabel('Dni')
-        plt.ylabel('Wszyscy klienci danego dnia')
+        plt.ylabel('Wszyscy klienci spoza Wroclawia danego dnia')
         plt.savefig(f"Wykres 12")
         fig = plt.figure("Wykres 13")
         for i in range(x):
@@ -464,7 +463,7 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append((dane[i][12]/dane[i][0])*100)
+            temp.append((dane[i][12] / dane[i][0]) * 100)
         plt.plot(warx, temp)
         plt.title('Stosunek awarii do wykonanych transakcji w ciagu x dni (%)')
         plt.xlabel('Dni')
@@ -484,7 +483,10 @@ class Simulation:
         for i in range(x):
             temp.pop()
         for i in range(x):
-            temp.append((dane[i][13] / dane[i][12])*100)
+            if dane[i][12] != 0:
+                temp.append((dane[i][13] / dane[i][12]) * 100)
+            else:
+                temp.append(0)
         plt.plot(warx, temp)
         plt.title('Stosunek przepelnienia kas do awarii w ciagu x dni (%)')
         plt.xlabel('Dni')
